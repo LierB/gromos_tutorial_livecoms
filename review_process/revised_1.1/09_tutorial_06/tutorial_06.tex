@@ -325,6 +325,31 @@ Including a charge model was e.g. relevant for the hexa-aqua iron, the model sys
 \subsubsection{Common errors}
 \textbf{[Note:} Please document frequently occurring errors, including a clear descriptive title for each error and a brief explanation of how it occurs, how to resolve it, and how to prevent it.\textbf{]}
 
+\paragraph{Incorrect unit conversion}
+BuRNN simulations require external quantum chemical software. A frequent source of error therefore arises from incorrect unit conversion between quantum mechanical and molecular dynamics software. In this tutorial we use MOPAC for QM calculations, which reports energies in kcal/mol and lengths in Å, while GROMOS uses SI units (e.g. kJ/mol for energy and nm for length). When coupling QM and MM components, the unit conversion block \texttt{QMUNIT} must be correctly configured. 
+
+While this tutorial uses MOPAC, users may integrate other QM software such as ORCA, Gaussian or Turbomole, which typically operate in atomic units (e.g. hartree for energy and bohr for length). These require different conversion factors and the unit conversion block \texttt{QMUNIT} must be updated accordingly. 
+If incorrect unit conversions are applied or omitted entirely, the simulations might run but will usually fail. 
+
+\subparagraph{Indicators for wrong conversion factors:}
+
+\begin{enumerate}
+  \item[-] Exploding or collapsing structures: atoms shoor apart or crash into each other because force magnitudes are too large or too small. The system will destabilize immediately. 
+  \item[-] Non-physical forces and dynamics: structures get distorted even when expected stable, e.g. the optimized geometry changes rapidly.
+  \item[-] Unrealistic energies: large unexplained energy differences between steps or replicates.
+\end{enumerate}
+
+The worst-case scenario is that your simulation “looks fine”, but produces numerically incorrect results. The system appears to bestable, but energy profiles or barriers are wrong by a factor of 4.184 (kcal/mol vs. kJ/mol) and one does not notice.
+
+\subparagraph{Recommendation and best practice:}
+
+\begin{enumerate}
+  \item[-] Identify the units of your QM output files. Default units of the software might have changed by input flags. It is recommended to compare bond lengths and reference energies.
+  \item[-] Double-check the conversion factors in the \texttt{QMUNIT} block of the \texttt{.qmm} input file.
+  \item[-] Be especially careful when switching to a different QM package or new input flags/files and output formats.
+\end{enumerate}
+
+
 \paragraph{Error}
 cause, indicators, solution, prevention, tips,...
 

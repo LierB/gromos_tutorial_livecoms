@@ -210,4 +210,25 @@ Because the performed trajectories are too short to obtain converged PMFs, the d
 \label{aladip_pmf}
 \end{figure}
 
+\subsubsection{Common errors}
+
+The most common error in setting up GaMD simulations is creating an undesired or erroneous selection of parameters for the accelerations and interaction groups. In the best case scenario, the selected inputs would be incompatible and will crash, worse case, the simulation will run without errors but the resulting acceleration may not match the ones desired by the user.
+Because of this, it is recommended to check the following:
+
+\begin{enumerate}
+  \item[-] All atoms in the system are assigned to at least one interaction group.
+  \item[-] No atom is assigned to more than one acceleration group.
+  \item[-] All interactions between the defined interaction groups are assigned to one acceleration group. If no acceleration is desired for a given interaction group, use acceleration group 0. 
+  \item[-] In total one should have: 
+  \begin{equation}
+  \begin{aligned}
+  \binom{n + 1}{2} = \frac{n(n + 1)}{2}
+  \end{aligned}
+\end{equation}
+  sets of interaction pairs where n is the number of interactions groups.
+  \item[-] A set of force constants (K) and energy thresholds (E) should be provided for each defined acceleration group.
+\end{enumerate}
+
+The second most common error when performing GaMD simulations is SHAKE errors. Since GaMD pumps energy into the system, although rarely, this can lead to the system blowing up. A solution for this problem is to decrease the amount of acceleration used on the system or to decrease the integration time step to 1 fs for a few steps to allow the system to stabilize.
+
 

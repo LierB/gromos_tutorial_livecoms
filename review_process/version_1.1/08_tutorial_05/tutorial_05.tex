@@ -220,3 +220,16 @@ Endstate 4  0.00        0.00        3368
 \end{lstlisting}
 
 We see that in the protein environment opposing the production run in water environment, where end-states 1,2,4 were equally likely and end-state 3 a little less likely, that end-state 3 is solely favorable in the protein enviroment, and almost all of the simulation time is spent to sample this state. As we used a parameter set that gives us roughly equal sampling over all end-states in a water environment this shift in sampling is due to the change in environment. This indicates, that just a single water at the position of water A is favored to be present in the binding site. 
+
+\subsubsection{Common Errors in AEDS Simulations}
+
+During the setup and execution of AEDS simulations, several common pitfalls can cause instability or simulation failures. Three primary error sources are frequently encountered:
+
+\paragraph{1. Errors in the topology/perturbation topology.}  
+A prevalent issue arises from incorrect or incomplete topologies. Since AEDS equilibrates the system with only one end state active at a time, structural or topological inconsistencies in the other end states may remain unnoticed until the AEDS search simulation. A telltale symptom is a consistent SHAKE failure during the first few steps of the simulation. This typically indicates faulty geometries, missing parameters, or unrealistic interactions in one or more inactive end states.
+
+\paragraph{2. Mismatched atom indices in perturbation topologies.}  
+A subtype of the first error involves incorrectly matched atom indices with the atoms to be perturbed. A frequent mistake occurs when users copy a ligand-in-water perturbation topology for use in the protein complex, without updating the atom indices to match the protein context. Since the perturbation relies on these indices to define the alchemical transformation, a mismatch results in nonsensical transformations, leading again to SHAKE errors at the start of the simulation.
+
+\paragraph{3. Methodological instabilities due to boosting potentials.}  
+Even with correct topologies, AEDS simulations can encounter SHAKE failures due to methodological factors. The application of boosting potentials can amplify interatomic forces, leading to bond length violations that exceed the SHAKE tolerance. In addition, the potential energy surface of the AEDS reference state may exhibit a cusp, leading to steep gradients and unreasonably high forces. In both cases, restarting the simulation with a reduced time step (e.g., 1~fs) and appropriately adjusted trajectory writeout frequency is often sufficient to stabilize the system. If reducing the time step is not sufficient to resolve the error, reinitializing the velocities may help stabilize the simulation. However, persistent SHAKE errors even at reduced time steps may still indicate deeper topological issues, such as missing exclusions or incorrect charge assignments.

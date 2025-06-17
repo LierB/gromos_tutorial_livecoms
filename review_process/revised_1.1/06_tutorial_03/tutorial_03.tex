@@ -155,7 +155,7 @@ Since we start from multiple configurations which are close to their respective 
 The next step will be to select the appropriate configurations from the slow-growth simulation as initial configurations for each of the replicas.
 
 The script \texttt{write\_start\_files.py} in the directory \texttt{starting\_coordinates} will help with this. 
-The program will find the $\lambda$ values of the replicas, look for the DF restraint in the PERTDFRESSPEC block in the distance restraints file and determine the restraining distances for each of the replicas from this information.
+The program will find the $\lambda$ values of the replicas, look for the DF restraint in the \texttt{PERTDFRESSPEC} block in the distance restraints file and determine the restraining distances for each of the replicas from this information.
 It will then search for the frame in the slow-growth simulation which has a DF distance which is closest to the restraining distance of this replica.
 This frame will be written to a separate file for each of the replicas, named \texttt{start\_\{X\}.cnf}, where \texttt{X} will be the replica number. 
 An example argument file is provided which lists the topology of the system, the DF distances over time of the slow-growth simulation (\texttt{df\_dist.dat}), the coordinate trajectory from the slow-growth simulation, the HREMD input file and the distance restraint specification file as will be used for the HREMD simulation. To run the script:
@@ -317,10 +317,21 @@ As mentioned before, the spacing of the replicas is not optimal in the current e
 This can influence both the convergence of the FEC and final binding free energies.
 An improvement of the accuracy of the final binding free energy can thus likely be obtained by optimizing the spacing of the replicas, adding more replicas and/or prolonging the simulations.
 
-\subsubsection{Common errors}
-\textbf{[Note:} Please document frequently occurring errors, including a clear descriptive title for each error and a brief explanation of how it occurs, how to resolve it, and how to prevent it.\textbf{]}
+\subsection{Common errors}
+\paragraph{Closing of the binding site}
+In some cases it can happen that the binding site closes up, such thatthere is no DF path possible from the active site to the solvent. In this case all grid points outside of the protein will get the additional protein penalty as defined with the parameter \texttt{PROTEINOFFSET}. If the site remains buried for some time, this becomes problematic especially if the ligand is unbound. Since all grid points outside the protein have the large \texttt{PROTEINOFFSET}, the DF distance basically becomes a radial distance again, and ligands could be forced to move through the protein instead of around it.
 
-\paragraph{Error}
-cause, indicators, solution, prevention, tips,...
+\subparagraph{Indication}
+The problem can be easily discovered by monitoring the DF distances during the simulation. As soon as the binding site closes, there will be a large jump in the DF distance, corresponding to the \texttt{PROTEINOFFSET} penalty.
+
+\subparagraph{Recommendation}
+One of the most important steps to prevent the closure of the binding site is the proper choice of the zero distance point. This point is typically the center of geometry of several atoms in the binding site. If you find that your binding is closing during the simulation, try the following tips for the definition of the zero distance point:
+
+\begin{enumerate}
+   \item[-] choose more stable atoms (e.g. backbone atoms)
+   \item[-] use more atoms to define the zero distance point
+\end{enumerate}
+
+The first point ensures that the zero distance point is stably defined and does not move through the active site due to e.g. side chain movements. The second point ensures that the force caused by the applied distance restraint is distributed over more atoms, making it less likely to cause distortions of the active site.
 
 

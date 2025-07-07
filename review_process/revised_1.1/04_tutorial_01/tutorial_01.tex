@@ -215,10 +215,7 @@ Figure~\ref{GB3_S2} shows a relatively small influence of the averaging time on 
 \end{figure}
 
 \subsubsection{Common errors}
-\textbf{[Note:} Please document frequently occurring errors, including a clear descriptive title for each error and a brief explanation of how it occurs, how to resolve it, and how to prevent it.\textbf{]}
-
-\paragraph{Error}
-cause, indicators, solution, prevention, tips,...
-
-
+\paragraph{Too large initial restraining forces}
+Order parameters are not instantaneous observables but averages over multiple configurations of the systems. At the beginning of the simulation, these averages have not been established yet but are initialized based on the starting configuration. Depending on the value of the restraining force constant a SHAKE error might occur within the first steps of the restraining simulation.
+To prevent too large initial restraining forces, a gradual increase of the restraining force constant over multiple runs is usually sufficient. Note that the occurrence of this error depends on the specific system under investigation.
 

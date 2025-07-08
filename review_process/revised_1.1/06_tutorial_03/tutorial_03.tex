@@ -318,20 +318,16 @@ This can influence both the convergence of the FEC and final binding free energi
 An improvement of the accuracy of the final binding free energy can thus likely be obtained by optimizing the spacing of the replicas, adding more replicas and/or prolonging the simulations.
 
 \subsection{Common errors}
+
 \paragraph{Closing of the binding site}
-In some cases it can happen that the binding site closes up, such thatthere is no DF path possible from the active site to the solvent. In this case all grid points outside of the protein will get the additional protein penalty as defined with the parameter \texttt{PROTEINOFFSET}. If the site remains buried for some time, this becomes problematic especially if the ligand is unbound. Since all grid points outside the protein have the large \texttt{PROTEINOFFSET}, the DF distance basically becomes a radial distance again, and ligands could be forced to move through the protein instead of around it.
+In some cases the binding site closes up, preventing a DF path from the active site to the solvent. As a result, all grid points outside of the protein will get the additional protein penalty as defined with the parameter \texttt{PROTEINOFFSET}. If the site remains buried for some time, this becomes problematic especially if the ligand is unbound. Since all grid points outside the protein have the large \texttt{PROTEINOFFSET}, the DF distance basically becomes a radial distance again, and ligands could be forced to move through the protein instead of around it.
 
-\subparagraph{Indication}
-The problem can be easily discovered by monitoring the DF distances during the simulation. As soon as the binding site closes, there will be a large jump in the DF distance, corresponding to the \texttt{PROTEINOFFSET} penalty.
+This issue is easily detected by a large jump in the DF distance as soon as the binding site closes.
 
-\subparagraph{Recommendation}
-One of the most important steps to prevent the closure of the binding site is the proper choice of the zero distance point. This point is typically the center of geometry of several atoms in the binding site. If you find that your binding is closing during the simulation, try the following tips for the definition of the zero distance point:
+A proper definition of the zero-distance point helps prevent the closure of the binding site. This point is typically the center of geometry of several atoms in the binding site. If your binding is closing during the simulation, try the following tips for the definition of the zero-distance point:
 
 \begin{enumerate}
-   \item[-] choose more stable atoms (e.g. backbone atoms)
-   \item[-] use more atoms to define the zero distance point
+   \item[-] Choose more stable atoms (e.g. backbone atoms) to ensure that the zero-distance point remains fixed and unaffected by side chain movements.
+   \item[-] Use more atoms to define the zero-distance point to distribute the restraint force and reduce distortion of the active site.
 \end{enumerate}
-
-The first point ensures that the zero distance point is stably defined and does not move through the active site due to e.g. side chain movements. The second point ensures that the force caused by the applied distance restraint is distributed over more atoms, making it less likely to cause distortions of the active site.
-
 

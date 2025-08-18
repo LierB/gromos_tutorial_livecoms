@@ -438,11 +438,12 @@ To reduce costs, one might increase the grid size. However, this can introduce s
 
 We recommend validating the chosen grid by checking whether further refinement leads to noticeable changes in the correction.
 
-\paragraph{Water model adaptations}
-While this tutorial uses the SPC water model, users may wish to apply a different one. In that case, the dielectric constant and quadrupole-moment trace must be adjusted accordingly:
-\begin{enumerate}
-\item[-] $\Delta G_{\text{pol}}$: In the argument file of \texttt{dGslv\_pbsolv}, the \texttt{epsRF} and \texttt{epsSOLV} parameters have to be set to the appropriate solvent permittivity.
-\item[-] $\Delta G_{\text{dir}}$: In the argument files for \texttt{ener} with periodic boundary conditions (PBC), set \texttt{eps} to the solvent permittivity.
-\item[-] $\Delta G_{\text{dsm}}$: Adjust the \texttt{gamW} parameter in the \texttt{integrate.py} script according to the solvent’s quadrupole-moment trace.
-\end{enumerate}
+% not a common error, but something to consider
+%\paragraph{Water model adaptations}
+%While this tutorial uses the SPC water model, users may wish to apply a different one. In that case, the dielectric constant and quadrupole-moment trace must be adjusted accordingly:
+%\begin{enumerate}
+%\item[-] $\Delta G_{\text{pol}}$: In the argument file of \texttt{dGslv\_pbsolv}, the \texttt{epsRF} and \texttt{epsSOLV} parameters have to be set to the appropriate solvent permittivity.
+%\item[-] $\Delta G_{\text{dir}}$: In the argument files for \texttt{ener} with periodic boundary conditions (PBC), set \texttt{eps} to the solvent permittivity.
+%\item[-] $\Delta G_{\text{dsm}}$: Adjust the \texttt{gamW} parameter in the \texttt{integrate.py} script according to the solvent’s quadrupole-moment trace.
+%\end{enumerate}
 

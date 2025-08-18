@@ -329,9 +329,9 @@ The buffer region is defined by a cutoff during atom selection with the \texttt{
 
 \begin{enumerate}
   \item[-] Inconsistent cutoff use: The same cutoff size has to be applied in the BuRNN simulations as in the training data set preparation. The neural networks predict reliable energies and forces only in the trained region, extrapolation beyond the buffer size can result in unphysical energies and forces which will be detected with the validation model.
-  \item[-] Poor cutoff placement: The cutoff should not lie in structurally or chemically ambiguous regions such as solvation shells. We recommend analyzing radial distribution functions to ensure the cutoff falls outside these regions.
+  \item[-] Poor cutoff placement: The cutoff should not lie in structurally or chemically ambiguous regions such as peaks in the solvation shells. We recommend analyzing radial distribution functions to ensure the cutoff falls outside these regions.
   \item[-] Buffer sizing: A too-large buffer increases QM calculation and NN training costs. If the buffer is too small, relevant environmental effects (e.g. polarization, charge redistribution or steric constraints) may be missed, leading to an incomplete description and inaccuracies.
-  \item[-] ???Covalent bonds: For larger, heterogenious systems, such as biomolecules, the buffer should be carefully defined and covalent bonds spanning over the buffer region - outer region interface should be treated with an atomistic cutoff and a link-atom scheme should be applied. 
+  %\item[-] Not yet published!!! Covalent bonds: For larger, heterogenious systems, such as biomolecules, the buffer should be carefully defined and covalent bonds spanning over the buffer region - outer region interface should be treated with an atomistic cutoff and a link-atom scheme should be applied. 
 \end{enumerate}
 
 \paragraph{Charged molecules}
@@ -350,7 +350,7 @@ Neural network training requires careful selection of hyperparameters. When appl
   \item[-] Unresolved environments: Too few Gaussians (\texttt{num\_gaussians}) may not capture chemical detail in the local atomic environment.
 \end{enumerate}
 
-In ordeer to assess model quality it is recommended to investigate the training and validation loss.
+In order to assess model quality it is recommended to investigate the training and validation loss.
 
 \paragraph{Incorrect unit conversion}
 BuRNN simulations require external quantum chemical software, which leads to frequent errors from incorrect unit conversion between softwares. 

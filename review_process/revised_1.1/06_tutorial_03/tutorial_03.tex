@@ -317,7 +317,7 @@ As mentioned before, the spacing of the replicas is not optimal in the current e
 This can influence both the convergence of the FEC and final binding free energies.
 An improvement of the accuracy of the final binding free energy can thus likely be obtained by optimizing the spacing of the replicas, adding more replicas and/or prolonging the simulations.
 
-\subsection{Common errors}
+\subsubsection{Common errors}
 
 \paragraph{Closing of the binding site}
 In some cases the binding site closes up, preventing a DF path from the active site to the solvent. As a result, all grid points outside of the protein will get the additional protein penalty as defined with the parameter \texttt{PROTEINOFFSET}. If the site remains buried for some time, this becomes problematic especially if the ligand is unbound. Since all grid points outside the protein have the large \texttt{PROTEINOFFSET}, the DF distance basically becomes a radial distance again, and ligands could be forced to move through the protein instead of around it.

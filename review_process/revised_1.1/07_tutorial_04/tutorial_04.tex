@@ -213,8 +213,8 @@ Because the performed trajectories are too short to obtain converged PMFs, the d
 \subsubsection{Common errors}
 
 \paragraph{Selection of parameters}
-A common source of error in GaMD simulations is an undesired or erroneous selection of parameters for acceleration and interaction groups. In the best case scenario, the selected inputs would be incompatible and will crash. In the worst case, the simulation will run without errors but the resulting acceleration may not match the ones desired by the user.
-Because of this, it is recommended to check the following:
+A common source of error in GaMD simulations is an undesired or erroneous selection of parameters for acceleration and interaction groups. If the selected inputs are incompatible, the program will terminate with an error. More concerning, however, is the possibility that the simulation completes successfully while producing accelerations that deviate from those intended by the user.
+It is therefore recommended to ensure the following:
 
 \begin{enumerate}
   \item[-] All atoms in the system are assigned to at least one interaction group.
@@ -234,4 +234,4 @@ Because of this, it is recommended to check the following:
 \paragraph{SHAKE errors}
 Since GaMD pumps energy into the system, although rarely, this can lead to the system blowing up resulting in SHAKE errors. 
 
-A solution for this problem is to decrease the amount of acceleration used on the system or to decrease the integration time step to 1 fs for a few steps to allow the system to stabilize.
+A solution for this problem is to decrease the amount of acceleration used on the system or to decrease the integration time step (e.g. from 2 fs to 1 fs) for a few steps to allow the system to stabilize.

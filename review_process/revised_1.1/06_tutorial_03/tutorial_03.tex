@@ -184,7 +184,7 @@ $ ./rep_ana_mpi.py replica_all.dat
 \end{lstlisting}
 The resulting \texttt{rep\_change.out} file can be opened with \linebreak Xmgrace. An example of such file is shown in  Figure~\ref{rep_change}.
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
 \includegraphics[scale=.3]{../06_tutorial_03/figures/rep_change}
 \caption{Replica exchanges during time. Different colors represent different replicas.}
@@ -227,7 +227,7 @@ This script also moves the final FEC on the y-axis such that its minimum is plac
 The file \texttt{wham\_FEC\_200bins \_5000iter\_min0.dat} now contains the final FEC, which is shown in Fig.~\ref{FEC}. As you can see, the curve is not completely flat at larger distances, but is rather noisy. Ideally, you would have to change the spacing of the replicas, add more replicas in the unbound range, or lower the maximum distance which you restrain such that the replicas are placed more densely in the unbound range. 
 However, we can still see where the plateau of the unbound range is, so we will go ahead with the calculation of the binding free energy.
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
 \includegraphics[scale=.3]{../06_tutorial_03/figures/FEC}
 \caption{Free Energy Curve (FEC) along the DF distance as obtained from HREMD simulations, for the PLA2-ASA system.}

@@ -56,7 +56,9 @@ The final equilibrated structures can be found in the directory \texttt{eq}. The
 To get the acceleration parameters ($E_{max}$, $E_{min}$, offsets) a search simulation needs to be performed. The search run starts from an equilibrated structure. If no initial parameters are given the search starts as a conventional MD simulation. After each simulation step $E_{max}$, $E_{min}$, and the offsets are updated. After approximately 5-25 ns the parameter search simulation converges. The needed simulation time depends mostly on the complexity of the system and the perturbation since we are dependent on visiting all end-states to adjust the acceleration parameters. In this tutorial, we will run a very short search simulation of 0.5 ns and use parameters from a longer simulation for the production run.  
 
 Go to the directory \texttt{search}. In this folder, you will find three files namely \texttt{aeds.arg}, \texttt{aeds.job}, and \texttt{aeds.imd}. Let's start with the \texttt{aeds.imd} file. This file is a simulation input file we already know from previous tutorials. At the bottom of the file, we have an additional \texttt{AEDS} block.
+
 \begin{lstlisting}
+
 AEDS
 # AEDS
      1
@@ -72,10 +74,10 @@ AEDS
     1000     10000 
 END
 \end{lstlisting}
-In the second line, we set $FORM$ to 5 specifying an all-parameter search using the adaptive search.
-Later we will change this into $FORM$ 1 to run a production run. Other options are described in the  \texttt{gromos} handbook. $NUMSTATES$ specifies the number of end-states in this simulation. Since we perturb two SPC water molecules A and B we get four possible end-states as all combinations of A and B being present or dummies as shown in table \ref{tab:states}.
+In the second line, we set \texttt{FORM} to 5 specifying an all-parameter search using the adaptive search.
+Later we will change this into \texttt{FORM} 1 to run a production run. Other options are described in the GROMOS handbook. \texttt{NUMSTATES} specifies the number of end-states in this simulation. Since we perturb two SPC water molecules A and B we get four possible end-states as all combinations of A and B being present or dummies as shown in table \ref{tab:states}.
 
-\begin{table}[h!]
+\begin{table}[t]
     \begin{center}
      \begin{tabular}{*{3}{m{0.1\textwidth}}}
       & \hfil A & \hfil B \\
@@ -107,14 +109,14 @@ Later we will change this into $FORM$ 1 to run a production run. Other options a
     \end{center}
 \end{table}
 
-In the third line, we set zeros for both $E_{max}$ and $E_{min}$ as well as for the offsets in the line underneath. If we had prior information about these values we could give them as a starting point for the search instead of starting from scratch. Line five is specific for search runs. With $NTIAEDSS$ 1 we initialise the search run. You will see that we turn it off in the jobscript after the first initialization. $RESTREMIN$ restricts $E_{min}$ to the minimum average end-state energy before all states have been visited at least once. $BMAXTYPE$ and $BMAX$ are used to control the estimated maximum barrier height. By default, we set both of them to 2. $ASTEPS$ is used to control the change rate in offsets. A higher number means a faster change in offsets. $BSTEPS$ is used for initial free-energy guesses in other search algorithms. In the argument file, we need to specify the folder location and the location of the md binaries as absolute paths. The \texttt{imd} file uses the $INNERLOOP$ block for \texttt{CUDA} support. If the used \texttt{gromos} binary does not support \texttt{CUDA}, comment the block out using hashtags. The jobfile is used to create ten \texttt{imd} and \texttt{run} files of the same simulation length as specified in \texttt{aeds.imd}. The only changes in the settings are that 
-$NTIAEDSS$ is set to zero after the first jobscript.
+In the third line, we set zeros for both \texttt{EMAX} and \texttt{EMIN} as well as for the offsets in the line underneath. If we had prior information about these values we could give them as a starting point for the search instead of starting from scratch. Line five is specific for search runs. With \texttt{NTIAEDSS} 1 we initialize the search run. You will see that we turn it off in the jobscript after the first initialization. \texttt{RESTREMIN} restricts $E_{min}$ to the minimum average end-state energy before all states have been visited at least once. \texttt{BMAXTYPE} and \texttt{BMAX} are used to control the estimated maximum barrier height. By default, we set both of them to 2. \texttt{ASTEPS} is used to control the change rate in offsets. A higher number means a faster change in offsets. \texttt{BSTEPS} is used for initial free-energy guesses in other search algorithms. In the argument file, we need to specify the folder location and the location of the md binaries as absolute paths. The \texttt{imd} file uses the \texttt{INNERLOOP} block for CUDA support. If the used GROMOS binary does not support CUDA, comment the block out using hashtags. The jobfile is used to create ten \texttt{imd} and \texttt{run} files of the same simulation length as specified in \texttt{aeds.imd}. The only changes in the settings are that 
+\texttt{NTIAEDSS} is set to zero after the first jobscript.
 
 With all input files prepared, we can now generate the run files using \texttt{mk\_script} from \texttt{gromos++} package with:
 \begin{lstlisting}
 $ mk_script @f aeds.arg
 \end{lstlisting}
-
+table
 For this tutorial, we provide two \texttt{mk\_script} libraries, one to prepare the run files for a cluster using SLURM as a queueing system (\texttt{libs/mk\_script.lib}), and one for running the simulations locally, (\texttt{libs/mk\_script\_local.lib}).
 
 After running the parameter search simulation, we can extract the acceleration parameters by using \texttt{ene\_ana}. The analysis files are provided in the subfolder \texttt{ana} in the search directory. 
@@ -125,7 +127,7 @@ You can run the program with
 $ ene_ana @f ene_ana.arg
 \end{lstlisting}
 
-The file \texttt{ene\_ana.arg} contains the information of which parameters to extract from the defined energy trajectories. The definitions of those parameters can be found in the library file \texttt{libs/ene\_ana.md++.lib}. \texttt{ene\_ana} will generate trajectories of the selected parameters. We could plot \texttt{eds\_emin.dat}, \texttt{eds\_emax.dat}, and \texttt{e*r.dat} to check for convergence, where the * in \texttt{e*r.dat} is to be replaced by the end-state number. These files contain the offsets for each end-state. Another way is to use \texttt{search.py} in the scripts folder. This script splits the trajectories into ten blocks and gives us the average $E_{min}$ and $E_{max}$ of the last block in the first line. Underneath the offsets with an error estimate for each end-state averaged for each block are shown. It also calculates the theoretical offsets, as the free-energy difference to the accelerated reference state, shown in the third column. In an ideal case, the offset values converge to a single value in the later blocks and have a small error estimate. In addition, they should be similar to the theoretical offset meaning the free-energy difference between the accelerated end-state and the accelerated reference state. Keep in mind that the offsets in column one are averaged around zero.
+The file \texttt{ene\_ana.arg} contains the information of which parameters to extract from the defined energy trajectories. The definitions of those parameters can be found in the library file \texttt{libs/ene\_ana.md++.lib}. \texttt{ene\_ana} will generate trajectories of the selected parameters. We could plot \texttt{eds\_emin.dat}, \texttt{eds\_emax.dat}, and \texttt{e*r.dat} to check for convergence, where the \texttt{*} in \texttt{e*r.dat} is to be replaced by the end-state number. These files contain the offsets for each end-state. Another way is to use \texttt{search.py} in the scripts folder. This script splits the trajectories into ten blocks and gives us the average $E_{min}$ and $E_{max}$ of the last block in the first line. Underneath the offsets with an error estimate for each end-state averaged for each block are shown. It also calculates the theoretical offsets, as the free-energy difference to the accelerated reference state, shown in the third column. In an ideal case, the offset values converge to a single value in the later blocks and have a small error estimate. In addition, they should be similar to the theoretical offset meaning the free-energy difference between the accelerated end-state and the accelerated reference state. Keep in mind that the offsets in column one are averaged around zero.
 To call \texttt{search.py} in the \texttt{search/ana} folder, do the following:
 
 \begin{lstlisting}
@@ -136,7 +138,7 @@ The output from the longer search run can be found in \texttt{search/ana/long}.
 We will use $E_{min}$ and $E_{max}$ as well as the offset parameters from the last block of each end-state found in \texttt{search.out}.
 
 \subsubsection{AEDS production run}
-With the parameters from the search run, we can now start a production run. From the production run, we can calculate our relative free energies. Go into the directory \texttt{prod}. Here we see two files, \texttt{aeds.arg} and \texttt{aeds.imd}. We do not use the $@joblist$ argument in the argument file, but the $@script$ argument to specify the number of jobs. If we take a short look into \texttt{aeds.imd} we will spot a few differences:
+With the parameters from the search run, we can now start a production run. From the production run, we can calculate our relative free energies. Go into the directory \texttt{prod}. Here we see two files, \texttt{aeds.arg} and \texttt{aeds.imd}. We do not use the \texttt{@joblist} argument in the argument file, but the \texttt{@script} argument to specify the number of jobs. If we take a short look into \texttt{aeds.imd} we will spot a few differences:
 
 \begin{lstlisting}
 AEDS
@@ -155,7 +157,7 @@ AEDS
 END
 \end{lstlisting}
 
-We now use $FORM$ 1 for a production run. We also inserted values for $E_{max}$, $E_{min}$, and the offsets. We also set $NTIAEDSS$ to zero which is optional since this line is not read in a production run. Similar to the search run we now use \texttt{mk\_script} to create our input files. Again, the $INNERLOOP$ block in the \texttt{imd} file has to be commented out if the used \texttt{gromos} binary does not support \texttt{CUDA}.
+We now use \texttt{FORM} 1 for a production run. We also inserted values for $E_{max}$, $E_{min}$, and the offsets. We also set \texttt{NTIAEDSS} to zero which is optional since this line is not read in a production run. Similar to the search run we now use \texttt{mk\_script} to create our input files. Again, the \texttt{INNERLOOP} block in the \texttt{imd} file has to be commented out if the used \texttt{gromos} binary does not support \texttt{CUDA}.
 Since we use well converged parameters we can get away with a short production run of 1 ns. In practice, production runs are mostly between 20-100 ns.
 
 \subsubsection{Production run analysis}
@@ -187,7 +189,7 @@ DF_4_3     3.0397569e-01     3.4513025e-01
 DF_4_R     4.7524775e+01     1.7868847e-01
 \end{lstlisting}
 
-In each row, we see a specifier like $DF\_1\_R$ meaning end-state 1 to the reference state, the relative free energy in kJ/mol, and an error estimate in kJ/mol. From two water present to no water present we get a free-energy difference of $53.3 \pm 0.1$ kJ/mol. From two water to one present and one not present we get $25.9 \pm 0.3$ kJ/mol and $26.2 \pm 0.3$ kJ/mol. Turning two different single water into dummies produces free energies in good agreement with each other as well as doing two at the same time which is roughly double the solvation free energy of a single water molecule. The values also agree with values from the literature \cite{gracia1}. To estimate the quality of our free energies as well as to estimate the time of occupancy for each end-state we use the \texttt{prevalence.py} script like:
+In each row, we see a specifier like \texttt{DF\_1\_R} meaning end-state 1 to the reference state, the relative free energy in kJ/mol, and an error estimate in kJ/mol. From two water present to no water present we get a free-energy difference of $53.3 \pm 0.1$ kJ/mol. From two water to one present and one not present we get $25.9 \pm 0.3$ kJ/mol and $26.2 \pm 0.3$ kJ/mol. Turning two different single water into dummies produces free energies in good agreement with each other as well as doing two at the same time which is roughly double the solvation free energy of a single water molecule. The values also agree with values from the literature \cite{gracia1}. To estimate the quality of our free energies as well as to estimate the time of occupancy for each end-state we use the \texttt{prevalence.py} script like:
 
 \begin{lstlisting}
 $ python ../../scripts/prevalence.py
@@ -203,11 +205,11 @@ Endstate 3  42163.19    21.08       5621
 Endstate 4  50356.36    25.88       7325
 \end{lstlisting}
 
-Showing the accumulated probability of each end-state over all frames (WEIGHT), the same value in percentage (PERCENTAGE), and the total number of frames that contributed to the final free energy within a cutoff of one $k_BT$ (\#FRAMES). The more frames contribute to the free energy the more certain we are to sample the true minimum of that state. Free energy estimates based on just a few frames are less trustworthy. If we use too much acceleration, this leads to a very flat energy surfaces, and we struggle to sample the real minima. In such a case, one would still find a lowest energy for that end-state which do not necessarily represent the true minimum, since the information was lost due to the flattening of the energy surface. 
+Showing the accumulated probability of each end-state over all frames (\texttt{WEIGHT}), the same value in percentage (\texttt{PERCENTAGE}), and the total number of frames that contributed to the final free energy within a cutoff of one $k_BT$ (\texttt{\#FRAMES}). The more frames contribute to the free energy the more certain we are to sample the true minimum of that state. Free energy estimates based on just a few frames are less trustworthy. If we use too much acceleration, this leads to a very flat energy surfaces, and we struggle to sample the real minima. In such a case, one would still find a lowest energy for that end-state which do not necessarily represent the true minimum, since the information was lost due to the flattening of the energy surface. 
 As you can see the parameters used resulted in a roughly equal sampling of all of the end-states. This means that we converged to values that result in an equilibrium between our end-states during the production run. Endstate 3 is slighty underrepresented in comparison and one could try to refine the parameter set to get more equal sampling. We will use this set of parameters in the water probing to catch the influence of a change in the environment on the sampling times.
 
 \subsubsection{Water probing}
-To capture the influence the environment has on our sampled water, we set up a production run with the parameter set optimized for the water environment in a protein-ligand environment. The Woodhead-2 system (pdb:2XJG\cite{woodhead2}) is used in this tutorial. Go into the folder \texttt{water\_probing}. Similar to the production run in water we have two files, \texttt{aeds.arg} and \texttt{aeds.imd} in the directory. Looking into \texttt{aeds.arg} we will see a few changes. Besides using the topology and coordinates for the Woodhead-2 system we also use a different perturbation topology since the perturbation file depends on the atom number in the topology which is changed because we now have a protein in our system. Additionally, we are also using distance restraints on the water molecules. The reason being that the end-states with the water turned into dummies have no interactions to keep them in place and the dummies would move out of the binding site. If we now take a look into the \texttt{aeds.imd} file we can see that besides the system-specific changes like the number of atoms, a distance restraint block is added. For more information about distance restraints read Tutorial 2 or check in the in the  \texttt{gromos} handbook. If we take a look at the AEDS block we will see that the same parameters are used as in the production run in water. Since this system is quite large we provide the output files from \texttt{ene\_ana} in the \texttt{water\_probing/ana/long} subdirectory.
+To capture the influence the environment has on our sampled water, we set up a production run with the parameter set optimized for the water environment in a protein-ligand environment. The Woodhead-2 system (pdb:2XJG\cite{woodhead2}) is used in this tutorial. Go into the folder \texttt{water\_probing}. Similar to the production run in water we have two files, \texttt{aeds.arg} and \texttt{aeds.imd} in the directory. Looking into \texttt{aeds.arg} we will see a few changes. Besides using the topology and coordinates for the Woodhead-2 system we also use a different perturbation topology since the perturbation file depends on the atom number in the topology which is changed because we now have a protein in our system. Additionally, we are also using distance restraints on the water molecules. The reason being that the end-states with the water turned into dummies have no interactions to keep them in place and the dummies would move out of the binding site. If we now take a look into the \texttt{aeds.imd} file we can see that besides the system-specific changes like the number of atoms, a distance restraint block is added. For more information about distance restraints read Tutorial 2 or check in the in the GROMOS handbook. If we take a look at the \texttt{AEDS} block we will see that the same parameters are used as in the production run in water. Since this system is quite large we provide the output files from \texttt{ene\_ana} in the \texttt{water\_probing/ana/long} subdirectory.
 
 After running \texttt{dfmult} and the prevalence script we will get the following:
 

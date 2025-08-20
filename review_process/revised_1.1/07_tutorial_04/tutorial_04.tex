@@ -42,12 +42,12 @@ In this tutorial we will use both the standard GaMD approach as well as a showca
 \subsubsection{Preparations}
 In this tutorial we will use alanine dipeptide as a test system. The alanine dipeptide is an extensively studied system that has been used to validate the different GaMD implementations \cite{pang2017gaussian, copeland2022gaussian, miao2015gaussian}. In this tutorial we will compute the potential of mean force (PMF) over the dihedrals $\phi$ and $\psi$ of the alanine dipeptide (Figure~\ref{aladip}).
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
 \includegraphics[scale=.3]{../07_tutorial_04/figures/aladip}
 \caption{Stick representation of alanine dipeptide with the $\phi$ and $\psi$ dihedrals highlighted.}
 \label{aladip}
-\end{figure}
+\end{figure} 
  
 The preparation of the topology, coordinates, the energy minimization and the equilibration of the system follow the same procedure as described in tutorial 1.
 The final equilibrated structure can be found in the directory \texttt{eq} with the name \texttt{aladip\_equilibrated.cnf}.
@@ -203,7 +203,7 @@ The version provided in the \texttt{scripts} folder contains a small modificatio
 
 Because the performed trajectories are too short to obtain converged PMFs, the dihedral and energy trajectories of a 100 ns run are provided in the subfolder \texttt{data}. The same analysis can be performed on the files provided there, producing the 2D-PMFs in figure \ref{aladip_pmf}.
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
 \includegraphics[scale=.43]{../07_tutorial_04/figures/pmf_tutorial}
 \caption{Potential of Mean Force (PMF) profiles over the $\phi$ and $\psi$ angles of the alanine dipeptide. A) Simulation using the standard GaMD approach reweighted with cumulant expansion to the second order. B) Simulation using the standard GaMD approach reweighted with exponential reweighing. C) Simulation using the selective GaMD approach reweighted with cumulant expansion to the second order. D) Simulation using the selective GaMD approach reweighted with exponential reweighing. }

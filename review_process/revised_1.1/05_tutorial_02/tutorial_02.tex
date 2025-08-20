@@ -3,7 +3,7 @@
 \subsection{Tutorial 2: Double decoupling method \& corrections for net-charge changes} \label{chap:tut2}
 The double decoupling method (DDM)~\cite{DDM} is an alchemical perturbation approach to compute binding free energies from molecular dynamics simulations by making use of a thermodynamic cycle (Figure \ref{TC_ASA}). Two of the branches are determined by thermodynamic integration corresponding to the decoupling of the ligand from the system (perturbing the ligand into a non-interacting dummy molecule), free in solution and when bound to the host. In order to avoid sampling of non-relevant phase space in the complexed system, the ligand is kept in a position that resembles that of the native bound conformation by gradually introducing a harmonic distance restraint. The free energy of the restraint removal can be evaluated analytically.
 
-\begin{figure}[H]
+\begin{figure}[t]
     \centering
     \includegraphics[scale=0.21]{../05_tutorial_02/figures/TC_ASA.png}
     \caption{Thermodynamic cycle for the calculation of the standard binding free energy of aspirin (ASA$^-$) binding to the protein phospholipase A$_2$ (PLA$_2$). ASA$^-$ is turned into a non-interacting dummy molecule (DUM), both in its complexed state (\textit{v}) and free in solution (\textit{ii}). The free energy of DUM binding to PLA$_2$ is zero (\textit{iii}). An intermediate state (DUM-PLA$_2$) is introduced by linking both binding partners with a harmonic distance restraint. The free energy contribution of this restraint can be calculated analytically (\textit{iv}) via equation \ref{disres}. The free energy differences of branches (\textit{ii}) and (\textit{v}) are determined via (extended) thermodynamic integration (TI), enabling the calculation of the standard binding free energy (\textit{i}).}
@@ -131,7 +131,7 @@ $ ./bar.sh
 %
 BAR is computationally more efficient and converges relatively fast compared to regular TI. The efficiency of X-TI is comparable with the added advantage of a direct visualization of the entire free energy profile~\cite{Maurer}.
 
-\begin{figure}[H]
+\begin{figure}[t]
     \centering
     \includegraphics[scale=0.3]{../05_tutorial_02/figures/ana_TI.png}
     \caption{The reweighted property $\left<\frac{\partial\mathcal{H}}{\partial\lambda}\right>$ for $\lambda$=0 to $\lambda$=1 for both systems ASA and PLA$_2$\_ASA.}
@@ -205,7 +205,7 @@ it directly but can use the bash script
 topologies at equidistant $\lambda$-points. These will be used for the
 individual correction terms explained in the following paragraphs.
 
-\begin{figure}[H]
+\begin{figure}[t]
     \centering
     \includegraphics[scale=0.14]{../05_tutorial_02/figures/general_application_corrections.png}
     \caption{Schematic representation of the corrections. $\Delta G_{\text{dsm}}$ is

@@ -31,15 +31,6 @@ In this tutorial, methanol in water will be used as a model system. In the conte
 
 We will learn how to install GROMOS with the interface to SchNetPack, generate a training data set, train the NN model and run the BuRNN simulation.
 
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=.33]{../09_tutorial_06/figures/BuRNN_scheme}
-\caption{(a) BuRNN scheme with its three regions: Inner region (orange) described by quantum mechanics (QM), buffer region (blue) described by QM and molecular mechanics (MM), outer region (gray) described by MM. (b) Test system: methanol solvated in SPC water. Methanol is the inner region, approximately two shells of water are the buffer region, and the rest of the water box builds the outer region.}
-\label{BuRNN_scheme}
-\end{figure}
-
-
 \subsubsection{Installation} \label{chap:burnn_install}
 \paragraph{Prerequisites}
 Before compiling the NN-enabled version of GROMOS to run Schnetpack (spk) NN models, we recommend compiling the standard version first. This will help isolate issues with missing or mismatched libraries that may arise during compilation.
@@ -49,6 +40,13 @@ After you successfully compiled the standard GROMOS engine, you are now ready to
 \end{lstlisting}
 
 For a system-wide installation without using the environment, please follow the installation instructions of the respective packages. The tested version of SchNetPack is \href{https://github.com/atomistic-machine-learning/schnetpack/releases/tag/v1.0.1}{v1.0.1} and pybind11 v2.6.2.
+
+\begin{figure}[t]
+\centering
+\includegraphics[scale=.33]{../09_tutorial_06/figures/BuRNN_scheme}
+\caption{(a) BuRNN scheme with its three regions: Inner region (orange) described by quantum mechanics (QM), buffer region (blue) described by QM and molecular mechanics (MM), outer region (gray) described by MM. (b) Test system: methanol solvated in SPC water. Methanol is the inner region, approximately two shells of water are the buffer region, and the rest of the water box builds the outer region.}
+\label{BuRNN_scheme}
+\end{figure}
 
 \paragraph{GPU acceleration}
 This part is optional to improve the efficiency of the simulations. The tasks in this tutorial are small enough to be run CPU-only in a reasonable time. For the production runs this is inefficient since the training and evaluation of models on a GPU is usually manifold faster. NN/MM MD simulations in GROMOS profit from this as well. Setting up your system to support the GPU acceleration is strongly architecture specific and is dependent on the installed CUDA and Pytorch versions. Please follow the installation instructions of CUDA and Pytorch to run tasks with the GPU acceleration.
@@ -293,7 +291,7 @@ In analogy to Tutorial 1 job scripts can be generated with the \texttt{mk\_scrip
 The trajectory files produced by the BuRNN simulation are the same as those produced by the standard MD simulation in GROMOS, meaning that we can perform any analysis. Here we decided to show hydrogen bonds and the radial distribution function (rdf) between the methanol treated at the QM level and the MM water molecules around. The argument files (\texttt{hbond\_meoh.arg} and \texttt{rdf\_ob\_ow.arg}) for the GROMOS programs \texttt{hbond} and \texttt{rdf} are provided in the \texttt{ana} directory. 
 The results can be seen in Figure~\ref{BuRNN_ana}.
 
-\begin{figure}[H]
+\begin{figure}[t]
 \centering
 \includegraphics[scale=.66]{../09_tutorial_06/figures/BuRNN_ana.png}
 \caption{\textbf{BuRNN simulation analysis. (a)} The number of hydrogen bonds formed between methanol and water for each snapshot of the trajectory. \textbf{(b)} Radial distribution function between the methanol's oxygen and all the oxygen atoms of the water molecules. The results are based on a 2 ns BuRNN simulation of the methanol in water.}

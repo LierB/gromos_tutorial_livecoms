@@ -127,7 +127,7 @@ END
 \end{lstlisting}
 By setting the switch \texttt{NTOPR} to \texttt{-1} you specifiy that you use time-averaged restraining without individual weights for the force constant. The switch \texttt{NTOPRA} controls reading of the 
 averages from the startup file. The value should be \texttt{0} for the first job and \texttt{1} for continuation jobs. The switch \texttt{COPR} defines the order parameter restraining force constant. With 
-\texttt{TAUOPR} the coupling time is specified. The switch \texttt{UPDOPR} is only relevant if the averages are not calculated using the damped memory approach but as a running average covering the 
+\texttt{TAUOPR} the relaxation time is specified. The switch \texttt{UPDOPR} is only relevant if the averages are not calculated using the damped memory approach but as a running average covering the 
 last \texttt{TAUOPR} picoseconds of the simulation. We note that window averaging shows no advantage over the damped memory approach while requiring a sizeable amount of RAM. Finally \texttt{NTWOP}
 controls how often the order parameters are written to the special trajectory. 
 The actual settings of the switches \texttt{NTOPRA}, \texttt{COPR} and \texttt{TAUOPR} are defined in the joblist \texttt{S2\_restraining.jobs} that has the following structure: 

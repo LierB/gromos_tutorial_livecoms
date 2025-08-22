@@ -14,7 +14,7 @@ The total potential energy of the system is calculated as follows:
 \end{equation}
 
 
- The energy difference of the first two terms is then directly described by a neural network potential: 
+ The energy difference of the first two terms is then directly described by a neural network potential-energy term: 
  
 \begin{equation}
   \begin{aligned}
@@ -165,7 +165,7 @@ For the model training we use two scripts, the \texttt{spk\_run.py} script and t
     \item[-] interactions = number of interaction blocks (default 3)
 \end{enumerate}
 
-The main goal of the training is to obtain a potential energy function, that is as close as possible to the reference one. Since besides the energies, we also have the analytical gradients or negative forces, it is beneficial to provide them for the training as well. They carry essential information about the shape of the function at the provided data points, which significantly improves the accuracy of the generated model. For that purpose, Schnetpack has a built-in functionality, which uses a loss function combining energies and forces. A loss weight (the argument \texttt{--rho}) is introduced to control the trade-off between the energy loss and the force loss. In this tutorial, we provide the optimized weights of 0.01 for the energies and 0.99 for the gradients. Please note, that the loss function mixes units of energies and forces and therefore the weights are unit-dependent. The gradients are not trained as a separate property; instead, they are used to improve the representation of the energy landscape by the model. In production runs, the model then provides the analytical gradients, which is essential for the conservation of energy in MD simulations.
+The main goal of the training is to obtain a potential-energy function, that is as close as possible to the reference one. Since besides the energies, we also have the analytical gradients or negative forces, it is beneficial to provide them for the training as well. They carry essential information about the shape of the function at the provided data points, which significantly improves the accuracy of the generated model. For that purpose, Schnetpack has a built-in functionality, which uses a loss function combining energies and forces. A loss weight (the argument \texttt{--rho}) is introduced to control the trade-off between the energy loss and the force loss. In this tutorial, we provide the optimized weights of 0.01 for the energies and 0.99 for the gradients. Please note, that the loss function mixes units of energies and forces and therefore the weights are unit-dependent. The gradients are not trained as a separate property; instead, they are used to improve the representation of the energy landscape by the model. In production runs, the model then provides the analytical gradients, which is essential for the conservation of energy in MD simulations.
 
 The \texttt{train.sh} bash script, which calls the Python script for training, is written as follows:
 \begin{lstlisting}[breaklines=true, breakatwhitespace=false]

@@ -29,7 +29,7 @@ H_R(\vec{r}) & = -\frac{k_BT}{s} \ln  \left( \sum_{i=1}^{N} e^{ -s(H_i(\vec{r}) 
 \label{eq:EDS2}
 \end{equation}
 
-This can lead to a deformation of the energy landscape, not preserving the position of the energy minima. Therefore, a refined approach using a boosting potential was proposed \cite{JP2018,JP2020}. Similar to Gaussian accelerated MD, a harmonic boosting potential is used to accelerate defined regions, namely the non-bonded interactions of the perturbed atoms. The accelerated reference Hamiltonian $H_R^{\ast}(\vec{r})$ is defined as shown in equation \ref{eq:AEDS}, where the acceleration range is defined by $E_{max}$ and $E_{min}$. 
+This can lead to a deformation of the energy landscape, not preserving the position of the energy minima. Therefore, a refined approach using a boosting potential-energy term was proposed \cite{JP2018,JP2020}. Similar to Gaussian accelerated MD, a harmonic boosting potential-energy term is used to accelerate defined regions, namely the non-bonded interactions of the perturbed atoms. The accelerated reference Hamiltonian $H_R^{\ast}(\vec{r})$ is defined as shown in equation \ref{eq:AEDS}, where the acceleration range is defined by $E_{max}$ and $E_{min}$. 
 
 \begin{equation}
   \begin{aligned}
@@ -75,7 +75,7 @@ AEDS
 END
 \end{lstlisting}
 In the second line, we set \texttt{FORM} to 5 specifying an all-parameter search using the adaptive search.
-Later we will change this into \texttt{FORM} 1 to run a production run. Other options are described in the GROMOS handbook. \texttt{NUMSTATES} specifies the number of end-states in this simulation. Since we perturb two SPC water molecules A and B we get four possible end-states as all combinations of A and B being present or dummies as shown in table \ref{tab:states}.
+Later we will change this into \texttt{FORM} 1 to run a production run. Other options are described in the GROMOS manual. \texttt{NUMSTATES} specifies the number of end-states in this simulation. Since we perturb two SPC water molecules A and B we get four possible end-states as all combinations of A and B being present or dummies as shown in table \ref{tab:states}.
 
 \begin{table}[t]
     \begin{center}
@@ -116,7 +116,7 @@ With all input files prepared, we can now generate the run files using \texttt{m
 \begin{lstlisting}
 $ mk_script @f aeds.arg
 \end{lstlisting}
-table
+
 For this tutorial, we provide two \texttt{mk\_script} libraries, one to prepare the run files for a cluster using SLURM as a queueing system (\texttt{libs/mk\_script.lib}), and one for running the simulations locally, (\texttt{libs/mk\_script\_local.lib}).
 
 After running the parameter search simulation, we can extract the acceleration parameters by using \texttt{ene\_ana}. The analysis files are provided in the subfolder \texttt{ana} in the search directory. 
@@ -209,7 +209,7 @@ Showing the accumulated probability of each end-state over all frames (\texttt{W
 As you can see the parameters used resulted in a roughly equal sampling of all of the end-states. This means that we converged to values that result in an equilibrium between our end-states during the production run. Endstate 3 is slighty underrepresented in comparison and one could try to refine the parameter set to get more equal sampling. We will use this set of parameters in the water probing to catch the influence of a change in the environment on the sampling times.
 
 \subsubsection{Water probing}
-To capture the influence the environment has on our sampled water, we set up a production run with the parameter set optimized for the water environment in a protein-ligand environment. The Woodhead-2 system (pdb:2XJG\cite{woodhead2}) is used in this tutorial. Go into the folder \texttt{water\_probing}. Similar to the production run in water we have two files, \texttt{aeds.arg} and \texttt{aeds.imd} in the directory. Looking into \texttt{aeds.arg} we will see a few changes. Besides using the topology and coordinates for the Woodhead-2 system we also use a different perturbation topology since the perturbation file depends on the atom number in the topology which is changed because we now have a protein in our system. Additionally, we are also using distance restraints on the water molecules. The reason being that the end-states with the water turned into dummies have no interactions to keep them in place and the dummies would move out of the binding site. If we now take a look into the \texttt{aeds.imd} file we can see that besides the system-specific changes like the number of atoms, a distance restraint block is added. For more information about distance restraints read Tutorial 2 or check in the in the GROMOS handbook. If we take a look at the \texttt{AEDS} block we will see that the same parameters are used as in the production run in water. Since this system is quite large we provide the output files from \texttt{ene\_ana} in the \texttt{water\_probing/ana/long} subdirectory.
+To capture the influence the environment has on our sampled water, we set up a production run with the parameter set optimized for the water environment in a protein-ligand environment. The Woodhead-2 system (pdb:2XJG\cite{woodhead2}) is used in this tutorial. Go into the folder \texttt{water\_probing}. Similar to the production run in water we have two files, \texttt{aeds.arg} and \texttt{aeds.imd} in the directory. Looking into \texttt{aeds.arg} we will see a few changes. Besides using the topology and coordinates for the Woodhead-2 system we also use a different perturbation topology since the perturbation file depends on the atom number in the topology which is changed because we now have a protein in our system. Additionally, we are also using distance restraints on the water molecules. The reason being that the end-states with the water turned into dummies have no interactions to keep them in place and the dummies would move out of the binding site. If we now take a look into the \texttt{aeds.imd} file we can see that besides the system-specific changes like the number of atoms, a distance restraint block is added. For more information about distance restraints read Tutorial 2 or check in the GROMOS manual. If we take a look at the \texttt{AEDS} block we will see that the same parameters are used as in the production run in water. Since this system is quite large we provide the output files from \texttt{ene\_ana} in the \texttt{water\_probing/ana/long} subdirectory.
 
 After running \texttt{dfmult} and the prevalence script we will get the following:
 
@@ -231,8 +231,8 @@ A prevalent issue arises from incorrect or incomplete topologies and perturbatio
 \paragraph{Mismatched atom indices in perturbation topologies}  
 A subtype of the first error involves incorrectly matched atom indices with the atoms to be perturbed. A frequent mistake occurs when users copy a ligand-in-water perturbation topology for use in the protein complex, without updating the atom indices to match the protein context. Since the perturbation relies on these indices to define the alchemical transformation, a mismatch results in nonsensical transformations, leading again to SHAKE errors at the start of the simulation.
 
-\paragraph{Methodological instabilities due to boosting potentials}  
-Even with correct topologies, AEDS simulations can encounter SHAKE failures due to methodological factors. The application of boosting potentials can amplify interatomic forces, leading to bond length violations that exceed the SHAKE tolerance. In addition, the potential energy surface of the AEDS reference state may exhibit a cusp, leading to sudden increase in the gradients and accordingly to high forces. 
+\paragraph{Methodological instabilities due to acceleration}  
+Even with correct topologies, AEDS simulations can encounter SHAKE failures due to methodological factors. The application of boosting potential-energy terms can amplify interatomic forces, leading to bond length violations that exceed the SHAKE tolerance. In addition, the potential energy surface of the AEDS reference state may exhibit a cusp, leading to sudden increase in the gradients and accordingly to high forces. 
 
 In both cases, restarting the simulation with a reduced time step (e.g., 1~fs) and appropriately adjusted trajectory writeout frequency is often sufficient to stabilize the system. If reducing the time step is not sufficient to resolve the error, reinitializing the velocities of the affected atoms may help stabilize the simulation. However, persistent SHAKE errors even at reduced time steps may still indicate deeper topological issues, such as missing exclusions or incorrect charge assignments.
 

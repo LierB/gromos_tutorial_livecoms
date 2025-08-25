@@ -33,7 +33,7 @@ When $E$ is set to the lower bound or as:
 K_0 = K_{0}^{"} \equiv \left(1 - \frac{\sigma_0}{\sigma_V}\right)\frac{V_{max} - V_{min}}{V_{max} - V_{avg}}
   \end{aligned}
 \end{equation}
-When $E$ is set to the upper bound. If $K_{0}^{"}$ is not found between 0 and 1 then $K_0$ is calculated with eq \eqref{lowerbound}. $\sigma_0$ corresponds to a user-specified upper limit for the $\sigma_{\Delta V}$ to ensure a narrow distribution of the boosting potential-energy term. In addition, GaMD offers different types of acceleration. One can accelerate the whole potential-energy term, only the dihedral term, or both separately (dual boosting).
+When $E$ is set to the upper bound. If $K_{0}^{"}$ is not found between 0 and 1 then $K_0$ is calculated with eq \eqref{lowerbound}. $\sigma_0$ corresponds to a user-specified upper limit for the $\sigma_{\Delta V}$ to ensure a narrow distribution of the boosting potential energy. In addition, GaMD offers different types of acceleration. One can accelerate the whole potential-energy term, only the dihedral term, or both separately (dual boosting).
 
 Recent improvements of the methodology have been developed, among them, "selective" GaMD in which instead of adding the boosting energy to the potential energy of the whole system, the boosting is selectively applied to a subset of the atoms of the system. These selective approaches allow for a stronger enhancement of the events of interest with no additional computational cost \cite{miao2020ligand, wang2020peptide, wang2022protein, wang2023ligand}. The cited methodologies allow to selectively accelerate small ligands, bound peptides and the interactions between two proteins. The selective GaMD methodology that will be used in this tutorial focuses on offering full flexibility in defining the regions that one wants to accelerate.
 
@@ -129,7 +129,7 @@ END
 The fourth line specifies the general parameters for the GaMD simulation, such as the search algorithm to use (\texttt{SEARCH}), whether the dihedral term has to be accelerated separatly (\texttt{FORM}), whether the energy threshold used is an upper or lower bound (\texttt{THRESH}), and whether the search needs to be initialized (\texttt{NTIGAMDS}). For this tutorial we will accelerate dihedral and total potential-energy terms separately (dual boosting approach) and the energy threshold will be set at the lower bound ($E$ = $V_{max}$). 
 The next line contains the number of atom groups and interaction groups or acceleration groups defined in the \texttt{gamd} file.
 \texttt{DIHSTD} and \texttt{TOTSTD} correspond to the values of $\sigma_0$ for the dihedral term boosting and the total potential-energy term boosting respectively.  
-The variables $ED$, $ET$, $KD$ and $KT$ are the acceleration parameters that define the boosting energy that will be applied to the system. $ED$ and $ET$ correspond to the list of energy thresholds for the dihedral terms and the potential energy of the system respectively, while $KD$ and $KT$ correspond to the list of force constants of the boosting energy applied to the dihedral term and to the potential energy term. Since this is a search run, all the parameters can be set to 0, for a production run, these parameters will need to be updated for the ones found during the search. Since each acceleration region requires its own parameters, if more than one acceleration region is defined, one must provide extra $ED$, $ET$, $KD$ and $KT$ parameters.
+The variables $ED$, $ET$, $KD$ and $KT$ are the acceleration parameters that define the boosting energy that will be applied to the system. $ED$ and $ET$ correspond to the list of energy thresholds for the dihedral terms and the potential energy of the system respectively, while $KD$ and $KT$ correspond to the list of force constants of the boosting energy applied to the dihedral term and to the potential-energy term. Since this is a search run, all the parameters can be set to 0, for a production run, these parameters will need to be updated for the ones found during the search. Since each acceleration region requires its own parameters, if more than one acceleration region is defined, one must provide extra $ED$, $ET$, $KD$ and $KT$ parameters.
 Finally, \texttt{EQSTEPS}  correspond to the number of equilibration steps to use before starting to collect statistics of the search simulation and \texttt{WINDOW} is the size of the window to use to collect the parameters, when \texttt{WINDOW} equals 0 the whole simulation is used to compute the needed statistics.
 
 All input files are now prepared and we can generate the run file with:
@@ -227,8 +227,8 @@ It is therefore recommended to ensure the following:
   \binom{n + 1}{2} = \frac{n(n + 1)}{2}
   \end{aligned}
 \end{equation}
-  sets of interaction pairs where n is the number of interactions groups.
-  \item[-] A set of force constants (K) and energy thresholds (E) should be provided for each defined acceleration group.
+  sets of interaction pairs where $n$ is the number of interactions groups.
+  \item[-] A set of force constants ($K$) and energy thresholds ($E$) should be provided for each defined acceleration group.
 \end{enumerate}
 
 \paragraph{SHAKE errors}

@@ -97,7 +97,7 @@ END
 \end{lstlisting}
 This block defines the number of acceleration potential-energy terms to use, and to which interactions they should be applied.
 In a similar fashion as with the previous block, \texttt{GAMDGROUPS} specifies the number of distinct acceleration potential-energy terms to use. 
-The next lines assigns each group of interactions to their corresponding acceleration group were \texttt{AGROUP\_1} and \texttt{AGROUP\_2}  are the indexes of the atom groups defined in the previous block and \texttt{ACCELGROUP} is the index for the acceleration potential-energy term. 
+The next lines assigns each group of interactions to their corresponding acceleration group where \texttt{AGROUP\_1} and \texttt{AGROUP\_2}  are the indexes of the atom groups defined in the previous block and \texttt{ACCELGROUP} is the index for the acceleration potential-energy term. 
 In the case of standard GaMD, we have only one acceleration group containing the interactions of all the atoms of the system. For the selective GaMD, the interactions of the alanine dipeptide with itself (\texttt{AGROUP\_1} = 1, \texttt{AGROUP\_2} = 1) and the interactions of the alanine dipeptide with the solvent (\texttt{AGROUP\_1} = 1, \texttt{AGROUP\_2} = 2) are assigned to one acceleration group. The interactions of the solvent with itself (\texttt{AGROUP\_1} = 2, \texttt{AGROUP\_2} = 2) are not assigned to any group and thus not accelerated. The same behaviour can be obtained by using \texttt{ACCELGROUP} = 0, which is never accelerated.
 
 \subsubsection{Acceleration parameter search}
@@ -154,7 +154,7 @@ The file \texttt{ene\_ana.arg} contains the information of which parameters to e
 Now that the search is complete we can run the production run.
 Go to the directory \texttt{prod}. In a similar fashion to the \texttt{search} directory, there you will find two directories, one for the standard GaMD methodology \texttt{gamd}, and one for the selective approach \texttt{selective\_gamd}. 
 The same imd used in the search runs can be used for the production ones. However, the search algorithm needs to be turned off (\texttt{SEARCH} = 0) and the acceleration parameters obtained from the search run need to be added in. 
-For this tutorial, since the search run was not long enough to obtained optimal acceleration parameters, the \texttt{imd} files already contain all the acceleration parameters needed in them, estimated from a longer GaMD search. We will run a production simulation for a total of 1~ns, although a true production run must be much longer.
+For this tutorial, since the search run was not long enough to obtain optimal acceleration parameters, the \texttt{imd} files already contain all the acceleration parameters needed in them, estimated from a longer GaMD search. We will run a production simulation for a total of 1~ns, although a true production run must be much longer.
 
 The run files can be created in the same way as in the search runs by using \texttt{mk\_script} with its corresponding \texttt{.arg} file.
 
@@ -168,7 +168,7 @@ $ tser @f phi_dihedral_tser.arg > phi.out
 \end{lstlisting}
 
 The argument files already contain the information needed to compute the dihedrals over time accounting for periodicity, providing values from -180 to 180 degrees.
-The next step is to extract the trajectory of the biasing potential-energy term used to then be able to reweight the obtained dihedral time series. This can be achieved by using the program \texttt{ene\_ana} in a similar fashion to how the acceleration parameters from the search were extracted. The values of interest are \texttt{totgamd\_dV} which contains the total boosting potential energy in kJ\/mol, \texttt{totunbiased} which contains the total potential energy excluding the boosting energy and \texttt{totpot} which contains the total potential energy. The boosting energy for each acceleration region can also be extracted independently by adding \texttt{gamd\_dVi} to the ene\_ana property list  @prop with the \texttt{i} sub-index indicating the acceleration group of interest.
+The next step is to extract the trajectory of the biasing potential-energy term used to then be able to reweight the obtained dihedral time series. This can be achieved by using the program \texttt{ene\_ana} in a similar fashion to how the acceleration parameters from the search were extracted. The values of interest are \texttt{totgamd\_dV} which contains the total boosting potential energy in kJ/mol, \texttt{totunbiased} which contains the total potential energy excluding the boosting energy and \texttt{totpot} which contains the total potential energy. The boosting energy for each acceleration region can also be extracted independently by adding \texttt{gamd\_dVi} to the ene\_ana property list  @prop with the \texttt{i} sub-index indicating the acceleration group of interest.
 After obtaining the collective variables (CV) and biasing potential-energy trajectories, the next step is to reweight and plot them. We will do this using both exponential reweighting and cumulant expansion to the second order.
 In the exponential reweighting, the time series of observed values of X (in this case the dihedral angles) sampled during the biased simulation R can be reweighted to the unbiased state Y using the following equation:
 

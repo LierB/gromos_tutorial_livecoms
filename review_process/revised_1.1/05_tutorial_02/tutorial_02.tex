@@ -1,27 +1,27 @@
 % Tutorial 02
 
 \subsection{Tutorial 2: Double decoupling method \& corrections for net-charge changes} \label{chap:tut2}
-The double decoupling method (DDM)~\cite{DDM} is an alchemical perturbation approach to compute binding free energies from molecular dynamics simulations by making use of a thermodynamic cycle (Figure \ref{TC_ASA}). Two of the branches are determined by thermodynamic integration corresponding to the decoupling of the ligand from the system (perturbing the ligand into a non-interacting dummy molecule), free in solution and when bound to the host. In order to avoid sampling of non-relevant phase space in the complexed system, the ligand is kept in a position that resembles that of the native bound conformation by gradually introducing a harmonic distance restraint. The free energy of the restraint removal can be evaluated analytically.
+The double decoupling method (DDM)~\cite{DDM} is an alchemical perturbation approach to compute binding free energies from molecular dynamics simulations by making use of a thermodynamic cycle (Figure \ref{TC_ASA}). Two of the branches are determined by thermodynamic integration corresponding to the decoupling of the ligand from the system (perturbing the ligand into a non-interacting dummy molecule), both free in solution and when bound to the host. In order to avoid sampling of non-relevant phase space in the complexed system, the ligand is kept in a position that resembles that of the native bound conformation by gradually introducing a harmonic distance restraint. The free energy of the restraint removal can be evaluated analytically.
 
 \begin{figure}[t]
     \centering
     \includegraphics[scale=0.21]{../05_tutorial_02/figures/TC_ASA.png}
-    \caption{Thermodynamic cycle for the calculation of the standard binding free energy of aspirin (ASA$^-$) binding to the protein phospholipase A$_2$ (PLA$_2$). ASA$^-$ is turned into a non-interacting dummy molecule (DUM), both in its complexed state (\textit{v}) and free in solution (\textit{ii}). The free energy of DUM binding to PLA$_2$ is zero (\textit{iii}). An intermediate state (DUM-PLA$_2$) is introduced by linking both binding partners with a harmonic distance restraint. The free energy contribution of this restraint can be calculated analytically (\textit{iv}) via equation \ref{disres}. The free energy differences of branches (\textit{ii}) and (\textit{v}) are determined via (extended) thermodynamic integration (TI), enabling the calculation of the standard binding free energy (\textit{i}).}
+    \caption{Thermodynamic cycle for the calculation of the standard binding free energy of aspirin (ASA$^-$) binding to the protein phospholipase A$_2$ (PLA$_2$). ASA$^-$ is turned into a non-interacting dummy molecule (DUM), both in its complexed state (\textit{v}) and free in solution (\textit{ii}). The free energy of DUM binding to PLA$_2$ is zero (\textit{iii}). An intermediate state (DUM-PLA$_2$) is introduced by linking both binding partners with a harmonic distance restraint. The free-energy contribution of this restraint can be calculated analytically (\textit{iv}) via equation \ref{disres}. The free-energy differences of branches (\textit{ii}) and (\textit{v}) are determined via (extended) thermodynamic integration (TI), enabling the calculation of the standard binding free energy (\textit{i}).}
     \label{TC_ASA}
 \end{figure}
 %
-In this tutorial we will calculate the standard binding free energy of aspirin (ASA) to the protein phospholipase A$_2$ (PLA$_2$) using the DDM and extended-thermodynamic interaction (X-TI)~\cite{X_TI}. 
+In this tutorial we will calculate the standard binding free energy of aspirin (ASA) to the protein phospholipase A$_2$ (PLA$_2$) using the DDM and extended-thermodynamic integration (X-TI)~\cite{X_TI}. 
 For an application of X-TI and corrections of net-charge changes in current research see e.~g. Ref.~\cite{Ohlknecht_2020b}.
 
 \subsubsection{Simulation setup}
-Preparation of topologies and coordinate files, energy minimization, solvation in SPC water and the addition of counter ions as well as the setup of equilibrations and simulations can be performed in analogy to tutorial 1. The Cartesian coordinates for the enzyme phospholipase A$_2$ with bound acetyl salicylic acid (ASA) can be obtained from the Protein Databank with accession code 1OXR~\cite{Singh2005}.
+Preparation of topologies and coordinate files, energy minimization, solvation in SPC water and the addition of counter ions as well as the setup of equilibrations and simulations can be performed in analogy to tutorial 1. The Cartesian coordinates for the enzyme phospholipase A$_2$ with bound acetyl salicylic acid (ASA) can be obtained from the Protein Data Bank with accession code 1OXR~\cite{Singh2005}.
 The final equilibrated structures, \texttt{eq\_ASA\_Na\_7.cnf} and \texttt{eq\_PLA2\_ASA\_Ca\_2Na\_7.cnf}, are in subdirectories \texttt{eq/eq\_ASA} and \texttt{eq/eq\_PLA2\_ASA} of the directory \texttt{t\_02}. 
 
 \subsubsection{Perturbation topology}
-Go into the subdirectory \texttt{topo}. The topologies for the ligand (\texttt{ASA.top}) and the protein (\texttt{PLA2.top}) are already prepared. You can also find the combined topologies with sodium counter ions and a calcium ion that is important for the ligand binding (\texttt{ASA\_Na.top} and \texttt{PLA2\_ASA\_Ca\_2Na.top}). For ligand decoupling, the topology for ASA in the decoupled state (\texttt{DUM.top}) was generated by changing the integer atom code (\texttt{IAC}) to 22 corresponding to dummy type for all the atoms and setting all the charges to 0. The program \texttt{make\_pt\_top} can convert topologies from state A and B into a perturbation topology. The \texttt{PERTATOMPARAM} block lists all atoms with their respective force field parameters that will be alchemically perturbed during the simulation. 
+Go into the subdirectory \texttt{topo}. The topologies for the ligand (\texttt{ASA.top}) and the protein (\texttt{PLA2.top}) are already prepared. You can also find the combined topologies with sodium counter ions and a calcium ion that is important for ligand binding (\texttt{ASA\_Na.top} and \texttt{PLA2\_ASA\_Ca\_2Na.top}). For ligand decoupling, the topology for ASA in the decoupled state (\texttt{DUM.top}) was generated by changing the integer atom code (\texttt{IAC}) to 22 corresponding to the dummy type for all the atoms and setting all the charges to 0. The program \texttt{make\_pt\_top} can convert topologies from state A and B into a perturbation topology. The \texttt{PERTATOMPARAM} block lists all atoms with their respective force field parameters that will be alchemically perturbed during the simulation. 
 
 \subsubsection{Distance restraints}
-Distance restraints are introduced for the calcium ion to keep it bound in the active site. For this a distance restraint specification file \texttt{disres.dat} is set up in subdirectory \texttt{eq} containing the following block.
+Distance restraints are introduced for the calcium ion to keep it bound in the active site. For this, a distance restraint specification file \texttt{disres.dat} is set up in subdirectory \texttt{eq} containing the following block.
 \begin{lstlisting}[columns=flexible]
 DISTANCERESSPEC
 # DISH  DISC
@@ -34,7 +34,7 @@ DISTANCERESSPEC
   1208  0  0  0  0    490  0  0  0  0    0.248  1.0   0
 END
 \end{lstlisting}
-The restraint is defined between the calcium ion and 5 atoms of residues coordinating the ion (3 amide oxygens and 2 carboxylate oxygens). \texttt{type} \texttt{0} is referring to explicit/real atoms. \texttt{r0} is the distance between two atoms in nm. The restraint is defined with a weight factor \texttt{w0} of 1 by which the distance restraint interaction term \texttt{CDIR} of the \texttt{DISTANCERES} block in the \texttt{imd}-file gets multiplied (force constant). The parameter \texttt{rah} controls the form and dimension of the restraint, here it is set to zero which corresponds to a full harmonic potential-energy term in $x$, $y$, $z$ dimensions. Parameters \texttt{DISH} and \texttt{DISC} are the hydrogen-carbon and carbon-carbon distances, respectively. GROMOS can also apply distance restraints on virtual or pseudo atoms by setting the appropriate type and a specification of additional atoms \texttt{j}, \texttt{k} and \texttt{l}. \\
+The restraint is defined between the calcium ion and 5 atoms of residues coordinating the ion (3 amide oxygens and 2 carboxylate oxygens). \texttt{type} \texttt{0} refers to explicit/real atoms. \texttt{r0} is the distance between two atoms in nm. The restraint is defined with a weight factor \texttt{w0} of 1 by which the distance restraint interaction term \texttt{CDIR} of the \texttt{DISTANCERES} block in the \texttt{imd}-file is multiplied (force constant). The parameter \texttt{rah} controls the form and dimension of the restraint, here it is set to zero, which corresponds to a full harmonic potential-energy term in $x$, $y$, $z$ dimensions. Parameters \texttt{DISH} and \texttt{DISC} are the hydrogen-carbon and carbon-carbon distances, respectively. GROMOS can also apply distance restraints on virtual or pseudo atoms by setting the appropriate type and a specification of additional atoms \texttt{j}, \texttt{k} and \texttt{l}. \\
 
 To keep the ligand within the active site when getting decoupled, we gradually turn on a harmonic distance restraint simultaneously to the perturbation. Go into the subdirectory \texttt{DDM/md\_TI} where you will find the \texttt{disres.dat} file which contains an additional block.
 \begin{lstlisting}
@@ -46,8 +46,8 @@ PERTDISRESSPEC
 END 
 \end{lstlisting}
 
-The distance restraint is defined between the centre of geometry (\texttt{type} \texttt{-1}) of 4 backbone atoms (\texttt{i}, \texttt{j}, \texttt{k} and \texttt{l}) of PLA$_2$ around the active site and the centre of geometry of 3 atoms of the ligand's benzene ring with a distance of zero (\texttt{A\_r0=B\_r0=0}). At state A the restraint is turned off (\texttt{A\_w0=0}), while at state B the restraint is retained with a weight factor of 1 (\texttt{B\_w0=1}). Parameters \texttt{n} and \texttt{m} control hidden 
-restraints~\cite{Christen}. Parameters \texttt{DISH} and \texttt{DISC} are not relevant for the centre of geometry and this type of pseudo atoms.
+The distance restraint is defined between the center of geometry (\texttt{type} \texttt{-1}) of 4 backbone atoms (\texttt{i}, \texttt{j}, \texttt{k} and \texttt{l}) of PLA$_2$ around the active site and the center of geometry of 3 atoms of the ligand's benzene ring with a distance of zero (\texttt{A\_r0=B\_r0=0}). At state A the restraint is turned off (\texttt{A\_w0=0}), while at state B the restraint is retained with a weight factor of 1 (\texttt{B\_w0=1}). Parameters \texttt{n} and \texttt{m} control hidden 
+restraints~\cite{Christen}. Parameters \texttt{DISH} and \texttt{DISC} are not relevant for the center of geometry and this type of pseudo atoms.
 
 \subsubsection{Extended-thermodynamic integration simulation} \label{chapt:exTI}
 The thermodynamic integration approach uses the coupling parameter $\lambda$, which defines the system as a linear combination of the two end-states~\cite{kirkwood_TI}. The coupling parameter approach formulates the Hamiltonian of the system dependent on $\lambda$ by interpolating between the two states (scaling of force-field parameters). \\
@@ -65,7 +65,7 @@ V^{\text{X}}(r_{ij},\lambda) = \frac{C_{12}^{\text{X}}}{(\alpha_{\text{lj}}\lamb
 \noindent where $C_{6}^{\text{X}}$, $C_{12}^{\text{X}}$, $q_i^{\text{X}}$ and $q_j^{\text{X}}$ are the Lennard-Jones parameters and partial charges for state X (A or B). $r_{ij}$ is the distance between particles $i$ and $j$, $C_{\text{rf}}$ and $R_{\text{rf}}$ are parameters of the electrostatic reaction field assumed outside the cutoff sphere \cite{Tironi1995}. 
 $\alpha_{\text{crf}}$ and $\alpha_{\text{lj}}$ are soft-core parameters \cite{Beutler1994}. 
 
-Go into the subdirectory \texttt{md\_TI}. The input files \texttt{md\_TI\_ASA\_Na.imd} and \texttt{md\_TI\_PLA2\_ASA\_Ca\_2Na.imd} contain two additional blocks that are relevant for the free energy calculations using X-TI integration. The \texttt{PERTURBATION} block controls the alchemical perturbation 
+Go into the subdirectory \texttt{md\_TI}. The input files \texttt{md\_TI\_ASA\_Na.imd} and \texttt{md\_TI\_PLA2\_ASA\_Ca\_2Na.imd} contain two additional blocks that are relevant for the free-energy calculations using X-TI. The \texttt{PERTURBATION} block controls the alchemical perturbation 
 \begin{lstlisting}
 PERTURBATION
 #     NTG   NRDGL    RLAM   DLAMT 
@@ -74,7 +74,7 @@ PERTURBATION
       1.0     1.0       1       0 
 END
 \end{lstlisting}
-\texttt{NTG} turns on the perturbation to calculate $\partial\mathcal{H}/\partial\lambda$ and \texttt{RLAM} is the initial value for $\lambda$. The initial value of $\lambda$ could also be read from the configuration when setting \texttt{NRDGL=1}. \texttt{RLAM} will be adjusted for several different $\lambda$ points using the jobs file \texttt{md\_TI.jobs}. \texttt{DLAMT} controls the increase of $\lambda$ with time. The parameters \texttt{ALPHLJ} and \texttt{ALPHC} are the soft-core parameters for Lennard-Jones ($\alpha_{\text{lj}}$) and Coulomb ($\alpha_{\text{crf}}$) interactions, respectively. \texttt{NLAM} controls the power dependence of the $\lambda$ coupling ($n$ in eq. \ref{equ:ext_ti}) and \texttt{NSCALE} the use of interaction scaling for complete energy groups.  
+\texttt{NTG} turns on the perturbation to calculate $\partial\mathcal{H}/\partial\lambda$ and \texttt{RLAM} is the initial value for $\lambda$. The initial value of $\lambda$ could also be read from the configuration by setting \texttt{NRDGL=1}. \texttt{RLAM} will be adjusted for several different $\lambda$ points using the jobs file \texttt{md\_TI.jobs}. \texttt{DLAMT} controls the increase of $\lambda$ with time. The parameters \texttt{ALPHLJ} and \texttt{ALPHC} are the soft-core parameters for Lennard-Jones ($\alpha_{\text{lj}}$) and Coulomb ($\alpha_{\text{crf}}$) interactions, respectively. \texttt{NLAM} controls the power dependence of the $\lambda$ coupling ($n$ in eq. \ref{equ:ext_ti}) and \texttt{NSCALE} the use of interaction scaling for complete energy groups.  
 
 The \texttt{PRECALCLAM} block is relevant for the pre-calculation of intermediate non-simulated $\lambda$-points during the simulation as extension to standard TI. 
 \begin{lstlisting}
@@ -83,35 +83,35 @@ PRECALCLAM
      81        0        1
 END
 \end{lstlisting}
-With the settings in the above block, the energies and derivatives with respect to $\lambda$ will be calculated on-the-fly at 81 points ranging from $\lambda$=0 to $\lambda$=1, which results in $\lambda$-steps of 0.0125.
+With the settings in the above block, the energies and derivatives with respect to $\lambda$ will be calculated on-the-fly at 81 points ranging from $\lambda$=0 to $\lambda$=1, resulting in $\lambda$-steps of 0.0125.
 
 
 %%for PLA2-ASA with disres and new gromos binary
 The simulation is defined in the jobs file \texttt{md\_TI.jobs}. Simulations will be performed at 11 equally spaced $\lambda$-points between $\lambda$=0 and $\lambda$=1 for 5 ns each in case of the complexed system, where ASA is bound to PLA$_2$. This system also requires the perturbed distance restraint. The simulations of ASA free in solution will also be performed at 11 $\lambda$-points each for 0.5 ns.   
 Note that this tutorial can also be carried out using standard TI, in which case the \texttt{PRECALCLAM} block is not required. 
 The choice of 11 equally spaced $\lambda$-points is typically a reasonable start, but it is recommended to adjust the number of points and the spacing according to the curvature and error estimates of $\partial\mathcal{H}/\partial\lambda$. 
-In X-TI, adjustment is often not necessary, even fewer points are sufficient in some cases, but for standard TI usually more than 11 $\lambda$-points are needed. 
+In X-TI, adjustment is often not necessary, even fewer points may be sufficient in some cases, but for standard TI usually more than 11 $\lambda$-points are needed. 
 Therefore, we strongly recommend to use the \texttt{PRECALCLAM} block and take advantage of the pre-calculation of intermediate non-simulated $\lambda$-points and subsequent reweighting.
-To run the two simulations, copy the argument files required by the \texttt{mk\_script} program into the two directories \texttt{md\_TI\_ASA} and \texttt{md\_TI\_PLA2\_ASA}, respectively, and adapt the paths before generating the job files with the \texttt{mk\_script} program and submitting the jobs to a cluster. If you prefer to continue directly, you will find the necessary energy and free energy trajectories in the subdirectories \texttt{L\_*}.
+To run the two simulations, copy the argument files required by the \texttt{mk\_script} program into the two directories \texttt{md\_TI\_ASA} and \texttt{md\_TI\_PLA2\_ASA}, respectively, and adapt the paths before generating the job files with the \texttt{mk\_script} program and submitting the jobs to a cluster. If you prefer to continue directly, you will find the necessary energy and free-energy trajectories in the subdirectories \texttt{L\_*}.
 
-\subsubsection{Free energy analysis}
-The free energies can be determined via extended-thermodynamic integration (X-TI)~\cite{X_TI} or the Bennett acceptance ratio (BAR) method~\cite{bar}. The raw data for both methods can be extracted from the energy and free energy trajectory files using the gromos++ program \texttt{ext\_ti\_ana}. 
+\subsubsection{Free-energy analysis}
+The free energies can be determined via extended-thermodynamic integration (X-TI)~\cite{X_TI} or the Bennett acceptance ratio (BAR) method~\cite{bar}. The raw data for both methods can be extracted from the energy and free-energy trajectory files using the GROMOS++ program \texttt{ext\_ti\_ana}. 
 
 Go into the subdirectory \texttt{DDM/ana\_TI/ana\_TI\_ASA} and run the program \texttt{ext\_TI\_ana} via the bash-script by typing
 \begin{lstlisting}
 $ ./ext_ti_ana_bar.sh
 \end{lstlisting}
 %
-X-TI requires the pre-calculation of free energies at non-simulated points. Free energy derivatives at requested non-simulated $\lambda_{\text{P}}$ values can be reweighted to obtain ensemble averages for $\lambda_{\text{P}}$ from simulated $\lambda_{\text{S}}$ points. The predictions from multiple simulations at $\lambda_{\text{S}}$ points can be merged into a single TI profile by a linear reweighting scheme using the program \texttt{ext\_TI\_merge}. 
+X-TI requires the pre-calculation of free energies at non-simulated points. Free-energy derivatives at requested non-simulated $\lambda_{\text{P}}$ values can be reweighted to obtain ensemble averages for $\lambda_{\text{P}}$ from simulated $\lambda_{\text{S}}$ points. The predictions from multiple simulations at $\lambda_{\text{S}}$ points can be merged into a single TI profile by a linear reweighting scheme using the program \texttt{ext\_TI\_merge}. 
 Run the program via the bash-script by typing
 \begin{lstlisting}
 $ ./ext_ti_merge.sh
 \end{lstlisting}
 %
-The program calculates the integral of the final TI-curve using the trapezoidal rule in order to obtain the free energy estimate. The results of X-TI for both systems, ASA and PLA2\_ASA, are shown in Figure~\ref{TI_ASA}.  
+The program calculates the integral of the final TI-curve using the trapezoidal rule in order to obtain the free-energy estimate. The results of X-TI for both systems, ASA and PLA2\_ASA, are shown in Figure~\ref{TI_ASA}.  
 
 
-BAR estimates free energies from the free energy differences between two adjacent $\lambda$ points $i$ and $j$, using
+BAR estimates free energies from the free-energy differences between two adjacent $\lambda$ points $i$ and $j$, using
 \begin{align}
 \Delta G(\lambda_i \rightarrow \lambda_j) 
      = k_{\text{B}} T \ln \frac{\langle f(E(\lambda_i) - E(\lambda_j) + C)\rangle_{\lambda_j}}
@@ -122,14 +122,14 @@ with
 f(x) = \frac{1}{1+\exp(x/k_{\text{B}} T)}
 \end{align}
 $C$ is determined iteratively to ensure that the two ensemble averages
-from $\lambda_i$ and $\lambda_j$ are identical. To calculate error estimates, a
+from $\lambda_i$ and $\lambda_j$ are identical. To calculate error estimates,
 bootstrap sampling can be conducted. Run the program \texttt{bar} via
 the bash-script by typing
 \begin{lstlisting}
 $ ./bar.sh 
 \end{lstlisting}
 %
-BAR is computationally more efficient and converges relatively fast compared to regular TI. The efficiency of X-TI is comparable with the added advantage of a direct visualization of the entire free energy profile~\cite{Maurer}.
+BAR is computationally more efficient and converges relatively fast compared to regular TI. The efficiency of X-TI is comparable, with the added advantage of direct visualization of the entire free-energy profile~\cite{Maurer}.
 
 \begin{figure}[t]
     \centering
@@ -159,20 +159,20 @@ simplifications in the calculations of the electrostatic interactions,
 the calculated free energies are artifacted. In the following
 paragraphs, we will refer to these energies as raw free energies. We
 will quantify and correct these artifacted components using a
-free energy correction $\Delta G_{\text{cor}}$ to yield methodology-independent
+free-energy correction $\Delta G_{\text{cor}}$ to yield methodology-independent
 values $\Delta G$ as
 \begin{align}
     \Delta G = \Delta G_{\text{raw}} + \Delta G_{\text{cor}}
 \end{align}
 %
 Analogous to Reif and Oostenbrink~\cite{Reif2014}, $\Delta G_{\text{cor}}$ is a
-combination of multiple free energy corrections for a spurious
+combination of multiple free-energy corrections for a spurious
 solvent-polarization ($\Delta G_{\text{pol}}$), the impracticality
 of
 calculating the zero of the potential under periodic boundary
 conditions using discrete solvent molecules ($\Delta G_{\text{dsm}}$) and
 artifacted direct interactions between the ligand and the host
-molecule ($\Delta G_{\text{dir}}$). The free energy correction is calculated
+molecule ($\Delta G_{\text{dir}}$). The free-energy correction is calculated
 as
 \begin{align} \label{equ:corrected_free_energy}
   \Delta G_{\text{cor}} = \Delta G_{\text{pol}} + \Delta G_{\text{dir}} + \Delta G_{\text{dsm}}
@@ -193,7 +193,7 @@ correction procedure will only be explained for Aspirin free in
 solution, the procedure for the complex is similar. Go into the
 directory \texttt{corrections/ASA}. First, we need to create a set of
 topologies for intermediate states. These topologies will have full,
-unperturbed VdW parameters but charges that scale with $\lambda$.  Go
+unperturbed van der Waals parameters but charges that scale with $\lambda$.  Go
 further into the subdirectory \texttt{correction\_topologies}. The
 python script \texttt{interpolate\_topocharges.py} takes three input
 parameters: topologies at states A and B and a specific
@@ -275,7 +275,7 @@ We are interested in the result NPBC - PBC, which is the correction term $\Delta
 
 \subsubsection{Direct ligand-protein interactions}
 In the actual MD simulation, the interaction between the ligand and
-the protein atoms was calculated by a cutoff scheme with a reaction
+the protein atoms was calculated using a cutoff scheme with a reaction
 field contribution. A correct scheme would involve no cutoff and
 purely Coulombic interactions. $\Delta
 G_{\text{dir}}$ accounts for the difference between the simulated and the
@@ -311,12 +311,12 @@ Another artifact stems from the impossibility of calculating the
 absolute zero potential in a periodic simulation box and the
 convention to average the solvent-generated potential over the
 exterior and the interior of the solvent molecules. As a consequence,
-the calculated potential differs from the ``real'' potential by an
+the calculated potential differs from the "real" potential by an
 offset. For a rigid solvent model with a single van der Waals
 interaction site and any scheme relying on molecular-cutoff truncation
 based on this specific site, it can be shown that this offset is
 related to the quadrupole moment trace of the solvent model used. The
-free energy correction is furthermore proportional to the
+free-energy correction is furthermore proportional to the
 water-molecule density inside the box (LS - lattice summation schemes)
 or within the cutoff radius (cutoff schemes with reaction-field
 correction - RF) and reads
@@ -335,8 +335,8 @@ box, $\left\langle N_{\text{S}}(R_{\text{C},i})\right\rangle$ is the average num
 solvent molecules in the cutoff sphere of the perturbed atom i, $V_{\text{B}}$ is the volume of the
 computational box and $V_{\text{C}}$ is the volume of the cutoff
 sphere. $\gamma_{\text{s}}$ is the quadrupole moment trace relative to the van
-der Waals interaction site. Values for typically used water models can be found in
-table \ref{tab:quadrupole_moments}. Hint: the reaction-field permittivity used in the simulations can be found in the \texttt{NONBONDED} block in one of the \texttt{imd} files, parameter \texttt{EPSRF}.
+der Waals interaction site. Values for commonly used water models can be found in
+table \ref{tab:quadrupole_moments}. Hint: the reaction-field permittivity used in the simulations can be found in the \texttt{NONBONDED} block of an \texttt{imd} file under the parameter \texttt{EPSRF}.
 
 \begin{table}[h]
   \center
@@ -359,15 +359,15 @@ table \ref{tab:quadrupole_moments}. Hint: the reaction-field permittivity used i
 Go into the subdirectory \texttt{corrections/ASA/dGdsm}. First, we need
 to calculate the average number of water molecules in the cutoff
 sphere that was used in the simulation. We will calculate this number
-using a radial distribution function (rdf) over the trajectory that
+using a radial distribution function (rdf) over the trajectory, which
 was generated with full charges on the perturbed atoms. The argument
 file for the GROMOS++ program \texttt{rdf} is already provided, 
-as is the output file for the case your simulation did not finish yet.
+as is the output file in case your simulation has not finished yet.
 You can run \texttt{rdf} by typing
 \begin{lstlisting}
 $ rdf @f rdf.arg > rdf.out 
 \end{lstlisting}
-The output file contains the densities of water particles as function of
+The output file contains the densities of water particles as a function of
 the distance of all the perturbed atoms. 
 %----------------------------------------------------------------------------------
 %To obtain the
@@ -407,13 +407,13 @@ calculated. According to equation \ref{equ:corrected_free_energy}, the
 sum of these three correction terms constitutes the total correction
 for this branch of the thermodynamic cycle. The same set of correction terms has to be
 calculated for the ligand bound to the host (directory \texttt{corrections/PLA2\_ASA}). Both corrections
-can be directly added to the raw free energies to yield
+can be directly added to the raw free energies, yielding
 methodologically independent results (see table \ref{tab:results}). The final calculated estimate $\Delta G^{\circ}_{\text{bind}} = \Delta G(\text{PLA}_2\_\text{ASA}) - \Delta G(\text{ASA}) = -32.3$ kJ/mol agrees 
 quite well with the experimentally determined estimate of $\Delta G_{\text{bind,exp}} = -29.6$ kJ/mol~\cite{Singh2005}.
 
 \begin{table}[h]
   \center
-  \caption{ Results from Double Decoupling with corrections. All values are reported in kJ/mol.}
+  \caption{Results from Double Decoupling with corrections. All values are reported in kJ/mol.}
   \label{tab:results}
   \begin{tabular}{ @{}l c@{\phantom{~~}} c c c c@{\phantom{~}} c@{}}
     \hline
@@ -428,13 +428,13 @@ quite well with the experimentally determined estimate of $\Delta G_{\text{bind,
 \subsubsection{Common errors}
 
 \paragraph{Insufficient $\lambda$-point resolution}
-Large variation in free energy estimates across replicates may indicate insufficient $\lambda$-point resolution, especially in regions with high curvature in $\partial\mathcal{H}/\partial\lambda$.
+Large variation in free-energy estimates across replicates may indicate an insufficient $\lambda$-point resolution, especially in regions with high curvature in $\partial\mathcal{H}/\partial\lambda$.
 
 To diagnose this, plot the predicted free-energy derivatives from neighboring simulated $\lambda$-points. If the predictions of two neighboring pre-calculated values differ significantly, intermediate $\lambda$-points should be added to improve accuracy.
 
 \paragraph{Coarse grid in $\Delta G_{\text{pol}}$ correction term}
 Solvent polarization corrections using Poisson–Boltzmann (PB) calculations are computationally expensive.
-To reduce costs, one might increase the grid size. However, this can introduce significant errors if the grid does not fully enclose the solute or fails to resolve its charge distribution accurately.
+To reduce computational costs, one might increase the grid spacing. However, this can introduce significant errors if the grid does not fully enclose the solute or fails to resolve its charge distribution accurately.
 
 We recommend validating the chosen grid by checking whether further refinement leads to noticeable changes in the correction.
 

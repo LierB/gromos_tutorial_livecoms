@@ -15,8 +15,8 @@ contains extensive documentation of the input flags. Furthermore, after compilat
 The tutorials described in this article assume the user to be familiar with the steps described in the GROMOS basic tutorial contained in volume 7 of the manual distributed with the software \cite{volume_7}. 
 Specifically, users should be familiar with the content of a GROMOS system topology, input files and analysis tools explained in detail there.
 Tutorial 1 (see section 3.1) repeats some of the basic system preparation steps but cannot be comprehensive in explaining all basic operations. We assume that the user is familiar with basic Linux or Unix 
-command line interactions and tools to efficiently edit larger plain text files such as VIM or Emacs. Furthermore a user should be able to visualise molecular structures (e.g. with PyMOL \cite{pymol} or VMD \cite{HUMP96}) 
-and to use basic plotting tools (e.g. Xmgrace, R, matplotlib).  
+command line interactions and tools to efficiently edit larger plain text files such as VIM or Emacs. Furthermore, a user should be able to visualize molecular structures (e.g. with PyMOL \cite{pymol} or VMD \cite{HUMP96}) 
+and to use basic plotting tools (e.g. xmgrace, R, matplotlib).  
 
 The GROMOS software for biomolecular simulation comprises the molecular dynamics engine MD++ and the \linebreak GROMOS++ suite of pre- and postprocessing programs. The program is independent of the computer architecture or force field used. 
 The units of the various quantities are defined outside the program through a physical constants block in a force-field file. The only unit conversion performed internally by the program is between degrees and radians. The force-field files come 
@@ -24,7 +24,7 @@ in GROMOS units, that is SI units, but with atomic mass units for mass, nm for d
 Input parameters specified by a user are not modified inside 
 the program. % unless incompatible with the code. In all cases a warning message is displayed. 
 A warning is displayed for inconsistencies in the input that may lead to an erroneous simulation, but could also be intentional.
-The interpretation of the results is simplified by an extensive 
+The interpretation of the results is simplified by extensive 
 documentation of the implemented algorithms and their technical details 
 in the manual available on the GROMOS web site \cite{volume_6,volume_2}.
 
@@ -34,7 +34,7 @@ in the manual available on the GROMOS web site \cite{volume_6,volume_2}.
 GROMOS can be compiled on almost any operating system compatible with the POSIX standard.
  Some of the libraries required are not available on standard operating systems and have to be installed 
 manually as described in detail in volume 8 of the GROMOS documentation \cite{volume_8}. 
-In order to use the GROMOS programs without specifying the full path you can add them to your PATH variable, see section 3.2.2. in volume 8.
-For some of the analyses in this tutorial a basic installation of Python 3 is required. 
-Note that files edited on non-Unix-like operating systems may cause an I/O-error due to a different representation of a line break. For the tutorial 6 "NN(QM)/MM simulations with the BuRNN approach", a special compilation of GROMOS with pybind11 links to SchNetPack is needed. It also relies on quantum-mechanical calculations that can be performed with any software that is preferred. In this tutorial we have used MOPAC (version MOPAC2016.22.067L), of which the output files are provided, see section \ref{chap:burnn_install}. 
+In order to use the GROMOS programs without specifying the full path, you can add them to your PATH variable, see section 3.2.2. in volume 8.
+For some of the analyses in this tutorial, a basic installation of Python 3 is required. 
+Note that files edited on non-Unix-like operating systems may cause an I/O-error due to a different representation of a line break. For tutorial 6 "NN(QM)/MM simulations with the BuRNN approach", a special compilation of GROMOS with pybind11 links to SchNetPack is needed. It also relies on quantum-mechanical calculations that can be performed with any software that is preferred. In this tutorial we have used MOPAC (version MOPAC2016.22.067L), for which the output files are provided, see section \ref{chap:burnn_install}. 
 

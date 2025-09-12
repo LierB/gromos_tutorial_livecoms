@@ -292,7 +292,7 @@ The results can be seen in Figure~\ref{BuRNN_ana}.
 
 \begin{figure}[t]
 \centering
-\includegraphics[scale=.66]{../09_tutorial_06/figures/BuRNN_ana.png}
+\includegraphics[scale=.56]{../09_tutorial_06/figures/BuRNN_ana.png}
 \caption{\textbf{BuRNN simulation analysis. (a)} The number of hydrogen bonds formed between methanol and water for each snapshot of the trajectory. \textbf{(b)} Radial distribution function (rdf) between the methanol's oxygen and all oxygen atoms of the water molecules. The results are based on a 2 ns BuRNN simulation of the methanol in water.}
 \label{BuRNN_ana}
 \end{figure}
@@ -312,7 +312,7 @@ NNCHARGE
 END
 \end{lstlisting}
 
-This block contains the path to the NN charge model and how often the charges should be updated (e.g. every \texttt{NUMSTP} steps).
+This block contains the path to the NN charge model and how often the charges are updated (every \texttt{NUMSTP} steps).
 
 Including a charge model was, for example, relevant for the hexa-aqua iron, the model system of the original BuRNN paper \cite{Lier2022BuRNN}. In this case, a considerable amount of charge transfer between the inner and buffer regions was observed, which needed to be reflected in their interactions with the outer region.
 
